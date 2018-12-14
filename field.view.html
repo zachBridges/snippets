@@ -1,0 +1,47 @@
+<div [formGroup]="form" [ngClass]="['field-'+field.key, 'field']">
+  <label [attr.for]="field.key" *ngIf="!field.hideLabel && !field.infieldLabel && field.controlType !== 'checkbox'" [innerHTML]="field.label"></label>
+  <div [ngSwitch]="field.controlType">
+    <input
+        *ngSwitchCase="'text'"
+        [formControlName]="field.key"
+        [id]="field.key"
+        [type]="field.controlType"
+        [attr.minLength]="field.minLength"
+        [attr.maxLength]="field.maxLength"
+        [attr.placeholder]="field.hideLabel ? field.label : null"
+        [attr.pattern]="field.numberOnly ? '[0-9]' : null"
+        (focus)="onFocus()"
+        (blur)="onBlur()"
+        (input)="field.inputHandler ? field.inputHandler($event) : null"
+    />
+    <select
+        *ngSwitchCase="'dropdown'"
+        [id]="field.key"
+        [formControlName]="field.key"
+        (focus)="onFocus()"
+        (blur)="onBlur()">
+      <option *ngIf="field.hideLabel && field.label" [value]="" disabled selected>{{ field.label }}</option>
+      <option *ngFor="let opt of field.options" [value]="opt.key">{{opt.value}}</option>
+    </select>
+    <input
+        #ck
+        *ngSwitchCase="'checkbox'"
+        [type]="field.controlType"
+        [formControlName]="field.key"
+        [id]="field.key"
+        [checked]="field.checked"
+        (change)="onChange(field, ck.checked)"
+        [(ngModel)]="field.value"
+        (click)="onCheckboxClick()"
+    />
+    <label [attr.for]="field.key" *ngIf="field.controlType === 'checkbox'" [innerHTML]="field.label"></label>
+  </div>
+  <span class="icn-status icn-warning" *ngIf="!isValid && formSubmitted"></span>
+  <span class="icn-status icn-tick" *ngIf="isValid && formSubmitted"></span>
+  <div
+      #errorModal
+      class="error-modal">
+    {{ field.errorMessage }}
+  </div>
+</div>
+
