@@ -31,7 +31,7 @@ export class FormService {
   }
 
   getForm( TemplateID: string, CallbackMethod: string ): any {
-    return this.restService.makeHwCall('GET_FORM', {
+    return this.restService.makeApiCall('GET_FORM', {
       TemplateID,
       CallbackMethod
     })
